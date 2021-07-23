@@ -2,6 +2,8 @@
 
 **Проверена работа в Python 3.8.7**
 
+Используется: **SQLite, Django, DRF, pytest, django-telegrambot**
+
 ## УСТАНОВКА
 
 1. Склонировать репозиторий
