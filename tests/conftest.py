@@ -18,5 +18,12 @@ def staff_factory():
     return factory
 
 @pytest.fixture
+def requests_factory():
+    def factory(**kwargs):
+        request = baker.make('requestsapi.Request', **kwargs)
+        return request
+    return factory
+
+@pytest.fixture
 def api_client():
     return APIClient()

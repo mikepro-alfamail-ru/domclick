@@ -19,6 +19,7 @@ from rest_framework.authtoken import views
 from django.conf.urls import url
 from requestsapi.views import RequestViewSet, StaffViewSet, CustomerViewSet
 from rest_framework.routers import DefaultRouter
+import django_telegrambot
 
 router = DefaultRouter()
 router.register('requests', RequestViewSet, 'requests')
@@ -30,5 +31,5 @@ router.register('staff', StaffViewSet, 'staff')
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^api-token-auth/', views.obtain_auth_token),
-    path('api/v0/', include(router.urls))
+    path('api/v0/', include(router.urls)),
 ]

@@ -2,4 +2,4 @@ django>=3
 django-filter
 djangorestframework
 psycopg2-binary
-pytelegrambotapi
+django-telegrambot

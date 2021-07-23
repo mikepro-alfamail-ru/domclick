@@ -1,11 +1,9 @@
-import telebot
 from rest_framework import serializers
+from django_telegrambot.apps import DjangoTelegramBot
+
+bot = DjangoTelegramBot.get_bot()
 
 from .models import Customers, Staff, Request
-
-from telebot_token import token
-
-bot = telebot.TeleBot(token)
 
 
 class CustomerSerializer(serializers.ModelSerializer):
@@ -31,5 +29,8 @@ class RequestSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         if validated_data.get('status') is not None and instance.status != validated_data.get('status'):
-            print('Haha!')
+            if instance.customer.telegram is not None:
+                chat_id = instance.customer.telegram
+                new_status = validated_data.get('status')
+                bot.sendMessage(chat_id, text=f'Request \"{instance}\" status changed to {new_status}')
         return super(RequestSerializer, self).update(instance, validated_data)

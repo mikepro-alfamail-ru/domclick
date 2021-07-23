@@ -1,14 +1,10 @@
 import pytest
 import random
 
-from .admintoken import admintoken
-
 from django.urls import reverse
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CONTENT
-from rest_framework.permissions import IsAuthenticated
 
 from requestsapi.models import Staff, Request, Customers
-from requestsapi.serializers import StaffSerializer, RequestSerializer, CustomerSerializer
 
 class DummyAuth:
     is_authenticated = True
@@ -21,7 +17,7 @@ def test_customers_retrieve(customers_factory, api_client):
     customer = customers_factory()
 
     url = reverse('customers-detail', args=(customer.id,))
-    api_client.force_authenticate(user=DummyAuth, token=admintoken)
+    api_client.force_authenticate(user=DummyAuth)
     resp = api_client.get(url)
     resp_json = resp.json()
 
@@ -34,7 +30,7 @@ def test_customers_list(customers_factory, api_client):
     # Проверка получения списка пользователей
     customers_factory(_quantity=4)
     url = reverse('customers-list')
-    api_client.force_authenticate(user=DummyAuth, token=admintoken)
+    api_client.force_authenticate(user=DummyAuth)
     resp = api_client.get(url)
     resp_json = resp.json()
 
@@ -49,11 +45,11 @@ def test_customers_id_filter(customers_factory, api_client):
     '''
     customers_factory(_quantity=5)
     names = Customers.objects.all()
-    id_set = set()
+    id_list = []
     for name in names:
-        id_set.add((name.id, name.name))
-    id, name = random.sample(id_set, 1)[0]
-    api_client.force_authenticate(user=DummyAuth, token=admintoken)
+        id_list.append((name.id, name.name))
+    id, name = random.sample(id_list, 1)[0]
+    api_client.force_authenticate(user=DummyAuth)
 
     data = {'id': id}
     url = reverse('customers-list')
@@ -82,7 +78,7 @@ def test_customers_create(api_client):
     name = 'Sample Customer'
     data = {'name': name}
 
-    api_client.force_authenticate(user=DummyAuth, token=admintoken)
+    api_client.force_authenticate(user=DummyAuth)
     resp = api_client.post(url, data=data)
     resp_json = resp.json()
     assert resp.status_code == HTTP_201_CREATED
@@ -99,7 +95,7 @@ def test_customers_update(customers_factory, api_client):
     new_customer_name = 'Another Customer'
     data = {'name': new_customer_name}
     url = reverse('customers-detail', args=(customer_id,))
-    api_client.force_authenticate(user=DummyAuth, token=admintoken)
+    api_client.force_authenticate(user=DummyAuth)
     resp = api_client.put(url, data=data)
     new_customer = Customers.objects.get(id=customer_id)
 
@@ -113,18 +109,18 @@ def test_customers_delete(customers_factory, api_client):
     customer = customers_factory(name='Sample Customer')
 
     url = reverse('customers-detail', args=(customer.id,))
-    api_client.force_authenticate(user=DummyAuth, token=admintoken)
+    api_client.force_authenticate(user=DummyAuth)
     resp = api_client.delete(url)
     assert resp.status_code == HTTP_204_NO_CONTENT
 
 
 @pytest.mark.django_db
 def test_staff_retrieve(staff_factory, api_client):
-    # Проверка получения пользователя
+    # Проверка получения сотрудника
     staff = staff_factory()
 
     url = reverse('staff-detail', args=(staff.id,))
-    api_client.force_authenticate(user=DummyAuth, token=admintoken)
+    api_client.force_authenticate(user=DummyAuth)
     resp = api_client.get(url)
     resp_json = resp.json()
 
@@ -134,10 +130,10 @@ def test_staff_retrieve(staff_factory, api_client):
 
 @pytest.mark.django_db
 def test_staff_list(staff_factory, api_client):
-    # Проверка получения списка пользователей
+    # Проверка получения списка сотрудников
     staff_factory(_quantity=4)
     url = reverse('staff-list')
-    api_client.force_authenticate(user=DummyAuth, token=admintoken)
+    api_client.force_authenticate(user=DummyAuth)
     resp = api_client.get(url)
     resp_json = resp.json()
 
@@ -147,16 +143,15 @@ def test_staff_list(staff_factory, api_client):
 
 @pytest.mark.django_db
 def test_staff_id_filter(staff_factory, api_client):
-    '''
-    проверка фильтрации списка пользователей по id и имени
-    '''
+    # проверка фильтрации списка сотрудников по id и имени
+
     staff_factory(_quantity=5)
     staff_list = Staff.objects.all()
-    id_set = set()
+    id_list = []
     for name in staff_list:
-        id_set.add((name.id, name.name))
-    id, name = random.sample(id_set, 1)[0]
-    api_client.force_authenticate(user=DummyAuth, token=admintoken)
+        id_list.append((name.id, name.name))
+    id, name = random.sample(id_list, 1)[0]
+    api_client.force_authenticate(user=DummyAuth)
 
     data = {'id': id}
     url = reverse('staff-list')
@@ -179,13 +174,13 @@ def test_staff_id_filter(staff_factory, api_client):
 
 @pytest.mark.django_db
 def test_staff_create(api_client):
-    # тест успешного создания пользователя
+    # тест успешного создания сотрудника
 
     url = reverse('staff-list')
-    name = 'Sample Customer'
+    name = 'Sample Staff'
     data = {'name': name}
 
-    api_client.force_authenticate(user=DummyAuth, token=admintoken)
+    api_client.force_authenticate(user=DummyAuth)
     resp = api_client.post(url, data=data)
     resp_json = resp.json()
     assert resp.status_code == HTTP_201_CREATED
@@ -193,16 +188,16 @@ def test_staff_create(api_client):
 
 
 @pytest.mark.django_db
-def test_courses_update(staff_factory, api_client):
-    # тест успешного обновления пользователя
+def test_staff_update(staff_factory, api_client):
+    # тест успешного обновления сотрудника
 
-    staff = staff_factory(name='Sample Customer')
+    staff = staff_factory(name='Sample Staff')
     staff_id = staff.id
 
-    new_staff_name = 'Another Customer'
+    new_staff_name = 'Another Staff'
     data = {'name': new_staff_name}
     url = reverse('staff-detail', args=(staff_id,))
-    api_client.force_authenticate(user=DummyAuth, token=admintoken)
+    api_client.force_authenticate(user=DummyAuth)
     resp = api_client.put(url, data=data)
     new_staff = Staff.objects.get(id=staff_id)
 
@@ -212,10 +207,67 @@ def test_courses_update(staff_factory, api_client):
 
 @pytest.mark.django_db
 def test_staff_delete(staff_factory, api_client):
-    # тест успешного удаления пользователя
-    staff = staff_factory(name='Sample Customer')
+    # тест успешного удаления сотрудника
+
+    staff = staff_factory(name='Sample Staff')
 
     url = reverse('staff-detail', args=(staff.id,))
-    api_client.force_authenticate(user=DummyAuth, token=admintoken)
+    api_client.force_authenticate(user=DummyAuth)
+    resp = api_client.delete(url)
+    assert resp.status_code == HTTP_204_NO_CONTENT
+
+
+@pytest.mark.django_db
+def test_request_create(customers_factory, api_client):
+    # тест успешного создания запроса
+    customer = customers_factory()
+
+    url = reverse('requests-list')
+    title = 'Sample Request'
+    data = {
+        'title': title,
+        'customer': customer.id
+    }
+
+    api_client.force_authenticate(user=DummyAuth)
+    resp = api_client.post(url, data=data)
+    resp_json = resp.json()
+    assert resp.status_code == HTTP_201_CREATED
+    assert resp_json['title'] == title
+
+
+@pytest.mark.django_db
+def test_request_update(requests_factory, customers_factory, api_client):
+    # тест успешного обновления запроса
+
+    customer = customers_factory()
+
+    request = requests_factory(title='Sample Request', customer=customer)
+
+    request_id = request.id
+
+    new_request_title = 'Another Request'
+    data = {
+        'title': new_request_title,
+        'customer': customer.id
+    }
+    url = reverse('requests-detail', args=(request_id,))
+    api_client.force_authenticate(user=DummyAuth)
+    resp = api_client.put(url, data=data)
+    new_request = Request.objects.get(id=request_id)
+
+    assert resp.status_code == HTTP_200_OK
+    assert new_request.title == new_request_title
+
+
+@pytest.mark.django_db
+def test_request_delete(requests_factory, customers_factory, api_client):
+    # тест успешного удаления запроса
+
+    customer = customers_factory()
+    request = requests_factory(title='Sample Request', customer=customer)
+
+    url = reverse('requests-detail', args=(request.id,))
+    api_client.force_authenticate(user=DummyAuth)
     resp = api_client.delete(url)
     assert resp.status_code == HTTP_204_NO_CONTENT

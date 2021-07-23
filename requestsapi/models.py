@@ -15,16 +15,28 @@ class Customers(models.Model):
     # Пользователи
 
     name = models.TextField()
-    email = models.TextField(null=True)
-    telegram = models.TextField(null=True)
+    email = models.TextField(null=True, unique=True)
+    telegram = models.TextField(null=True, blank=True)
 
+    def __str__(self):
+        return f"{self.name}"
+
+    class Meta:
+        verbose_name = 'пользователь'
+        verbose_name_plural = 'пользователи'
 
 class Staff(models.Model):
     # Сотрудники
 
     name = models.TextField()
-    email = models.TextField(null=True)
+    email = models.TextField(null=True, unique=True)
 
+    def __str__(self):
+        return f"{self.name}"
+
+    class Meta:
+        verbose_name = 'сотрудник'
+        verbose_name_plural = 'сотрудники'
 
 class RequestStatusChoices(models.TextChoices):
     """Статусы заявки"""
@@ -38,13 +50,13 @@ class Request(models.Model):
     """Заявка"""
 
     title = models.TextField()
-    description = models.TextField(default='')
+    description = models.TextField(default='', blank=True)
     status = models.TextField(
         choices=RequestStatusChoices.choices,
         default=RequestStatusChoices.OPEN
     )
     customer = models.ForeignKey(Customers, on_delete=models.CASCADE, related_name='request')
-    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='request', null=True)
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='request', null=True, blank=True)
     created_at = models.DateTimeField(
         auto_now_add=True
     )
