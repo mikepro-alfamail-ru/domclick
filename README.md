@@ -36,7 +36,7 @@ PowerShell   PS         C:\> <venv>\Scripts\Activate.ps1
 `pip install -r requirements.txt`
 или 
 
-`pip install requirements-dev.txt` для поддержки тестов
+`pip install -r requirements-dev.txt` для поддержки тестов
 
 6. Для работы телеграм бота необходимы токен и имя бота.
 
