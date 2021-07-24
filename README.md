@@ -198,6 +198,25 @@ Authorization: Token {{admintoken}}
   
 (пример ответа выше)
 
+Осуществлена возможность поиска по полям `'created_at', 'updated_at', 'customer', 'staff', 'status'`
+
+```
+GET {{baseUrl}}/api/v0/requests/?customer=2
+Authorization: Token {{admintoken}}
+
+###
+
+GET {{baseUrl}}/api/v0/requests/?status=CLOSED
+Authorization: Token {{admintoken}}
+```
+
+Поиск по полям `'created_at', 'updated_at'` осуществляется в виде интервалов.
+
+```
+GET {{baseUrl}}/api/v0/requests/?created_at_after=2021-07-23&created_at_before=2021-07-24
+Authorization: Token {{admintoken}}
+```
+
 - POST
 
 Пример:
