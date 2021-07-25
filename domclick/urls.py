@@ -16,15 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 from rest_framework.authtoken import views
-from django.conf.urls import url
-from requestsapi.views import RequestViewSet, StaffViewSet, CustomerViewSet
+from requestsapi.views import RequestViewSet, StaffViewSet, CustomerViewSet, RequestsTypesViewSet
 from rest_framework.routers import DefaultRouter
-import django_telegrambot
 
 router = DefaultRouter()
 router.register('requests', RequestViewSet, 'requests')
 router.register('customers', CustomerViewSet, 'customers')
 router.register('staff', StaffViewSet, 'staff')
+router.register('requeststypes', RequestsTypesViewSet, 'requeststypes')
 
 
 

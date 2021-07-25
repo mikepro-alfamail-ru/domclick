@@ -3,7 +3,7 @@ from django_telegrambot.apps import DjangoTelegramBot
 
 bot = DjangoTelegramBot.get_bot()
 
-from .models import Customers, Staff, Request
+from .models import Customers, Staff, Request, RequestsTypes
 
 
 class CustomerSerializer(serializers.ModelSerializer):
@@ -21,11 +21,24 @@ class StaffSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class RequestsTypesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = RequestsTypes
+        fields = '__all__'
+
+
 class RequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Request
         fields = '__all__'
+
+    def create(self, validated_data):
+        if validated_data.get('customer').telegram is not None:
+            chat_id = validated_data.get('customer').telegram
+            bot.sendMessage(chat_id, text=f'Your request \"{validated_data.get("title")}\" was OPENED!')
+        return super(RequestSerializer, self).create(validated_data)
 
     def update(self, instance, validated_data):
         if validated_data.get('status') is not None and instance.status != validated_data.get('status'):

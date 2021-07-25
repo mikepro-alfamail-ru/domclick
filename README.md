@@ -16,8 +16,8 @@
 
 3. Установить virtual environment
 
-`python -m venv <%venv_dir%>
-`
+`python -m venv <%venv_dir%>`
+
 4. И активировать
 
 ```
@@ -78,7 +78,7 @@ PowerShell   PS         C:\> <venv>\Scripts\Activate.ps1
 
 Для доступа ко всем функиям API используется авторизация по токену
 
-`Authorization: Token <%superuser_token%>`
+`Authorization: Token {%superuser_token%}`
 
 ### Ресурсы
 
@@ -130,7 +130,7 @@ Content-Type: application/json
 Пример:
 
 ```
-PATCH {{baseUrl}}/api/v0/staff/1/
+PATCH {{baseUrl}}/api/v0/staff/{%id_сотрудника%}/
 Authorization: Token {{admintoken}}
 Content-Type: application/json
 
@@ -144,15 +144,72 @@ Content-Type: application/json
 Пример:
 
 ```
-DELETE {{baseUrl}}/api/v0/staff/1/
+DELETE {{baseUrl}}/api/v0/staff/{%id_сотрудника%}/
 Authorization: Token {{admintoken}}
-Content-Type: application/json
-
 ```
 
 #### api/v0/customers - Пользователи
 
 Использование аналогично staff
+
+#### api/v0/requeststypes - Типы заявок
+
+- GET - получить список 
+
+```
+GET  {{baseUrl}}/api/v0/requeststypes/
+Authorization: Token {{admintoken}}
+```
+
+Пример ответа:
+
+```
+[
+  {
+    "id": 1,
+    "name": "Отрицание"
+  },
+  {
+    "id": 2,
+    "name": "Гнев"
+  },
+  {
+    "id": 3,
+    "name": "Торг"
+  }
+]
+```
+
+- POST - создать
+
+```
+POST  {{baseUrl}}/api/v0/requeststypes/
+content-type: application/json
+Authorization: Token {{admintoken}}
+
+{
+  "name": "Депппрессия"
+}
+```    
+
+- PATCH - изменить
+
+```
+PATCH   {{baseUrl}}/api/v0/requeststypes/{%id_типа%}/
+content-type: application/json
+Authorization: Token {{admintoken}}
+
+{
+  "name": "Депрессия"
+}
+```
+
+- DELETE - удалить
+```
+DELETE {{baseUrl}}/api/v0/requeststypes/{%id_типа%}/
+content-type: application/json
+Authorization: Token {{admintoken}}
+```
 
 #### api/v0/requests - Заявки
 
@@ -167,6 +224,7 @@ Content-Type: application/json
     "status": "CLOSED",
     "created_at": "2021-07-22T20:08:37.632000Z",
     "updated_at": "2021-07-23T21:16:04.887986Z",
+    "type": 1,
     "customer": 1,
     "staff": 1
   },
@@ -177,6 +235,7 @@ Content-Type: application/json
     "status": "OPEN",
     "created_at": "2021-07-23T21:15:57.639827Z",
     "updated_at": "2021-07-23T21:15:57.639827Z",
+    "type": 1,
     "customer": 1,
     "staff": null
   }
@@ -227,14 +286,15 @@ Content-Type: application/json
 
 {
   "title": "Test title",
-  "customer": 1
+  "customer": 1,
+  "type": 1
 }
 ```
 
 - PATCH
 
 ```
-PATCH {{baseUrl}}/api/v0/requests/1/
+PATCH {{baseUrl}}/api/v0/requests/{%id_заявки%}/
 Authorization: Token {{admintoken}}
 Content-Type: application/json
 
@@ -247,7 +307,7 @@ Content-Type: application/json
 - DELETE
 
 ```
-DELETE {{baseUrl}}/api/v0/requests/1/
+DELETE {{baseUrl}}/api/v0/requests/{%id_заявки%}/
 Authorization: Token {{admintoken}}
 ```
 

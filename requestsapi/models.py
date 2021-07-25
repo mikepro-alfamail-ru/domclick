@@ -38,6 +38,13 @@ class Staff(models.Model):
         verbose_name = 'сотрудник'
         verbose_name_plural = 'сотрудники'
 
+class RequestsTypes(models.Model):
+
+    name = models.TextField()
+    class Meta:
+        verbose_name = 'тип заявки'
+        verbose_name_plural = 'типы заявок'
+
 class RequestStatusChoices(models.TextChoices):
     """Статусы заявки"""
 
@@ -55,6 +62,7 @@ class Request(models.Model):
         choices=RequestStatusChoices.choices,
         default=RequestStatusChoices.OPEN
     )
+    type = models.ForeignKey(RequestsTypes, on_delete=models.CASCADE, related_name='request', null=True, blank=True)
     customer = models.ForeignKey(Customers, on_delete=models.CASCADE, related_name='request')
     staff = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='request', null=True, blank=True)
     created_at = models.DateTimeField(
