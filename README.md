@@ -1,5 +1,7 @@
 # Тестовое задание для ДомКлик
 
+[Задание](task.pdf)
+
 **Проверена работа в Python 3.8.7**
 
 Используется: **SQLite, Django, DRF, pytest, django-telegrambot**
