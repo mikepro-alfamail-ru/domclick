@@ -259,10 +259,15 @@ Authorization: Token {{admintoken}}
   
 (пример ответа выше)
 
-Осуществлена возможность поиска по полям `'created_at', 'updated_at', 'customer', 'staff', 'status'`
+Осуществлена возможность поиска по полям `'created_at', 'updated_at', 'customer', 'staff', 'status', 'type`
 
 ```
 GET {{baseUrl}}/api/v0/requests/?customer=2
+Authorization: Token {{admintoken}}
+
+###
+
+GET {{baseUrl}}/api/v0/requests/?type=1
 Authorization: Token {{admintoken}}
 
 ###

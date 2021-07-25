@@ -10,7 +10,7 @@ class RequestFilter(filters.FilterSet):
 
     class Meta:
         model = Request
-        fields = ('status', 'created_at', 'updated_at', 'customer', 'staff', 'status',)
+        fields = ('type', 'created_at', 'updated_at', 'customer', 'staff', 'status',)
 
 
 class CustomersFilter(filters.FilterSet):
